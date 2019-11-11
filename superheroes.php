@@ -63,10 +63,51 @@ $superheroes = [
   ], 
 ];
 
+$hero = preg_replace("/[^A-Za-z0-9\-\']/", '', str_replace(" ", "", trim(strtolower($_POST["heroName"]))));
+
+
+$html = '';
+
+	foreach ($superheroes as $superhero): 
+	
+		if (str_replace(" ", "", trim(strtolower($superhero['alias']))) == $hero) {
+			//foreach ($superhero as $detail):
+			//	echo "<h4>".$detail."</h4>";
+			//endforeach;
+			$html = $superhero['alias'].' <hr> '.$superhero['name'].'<hr>'.$superhero['biography'];
+			}
+			
+		if (str_replace(" ", "", trim(strtolower($superhero['name']))) == $hero) {
+			//foreach ($superhero as $detail):
+			//	echo "<h4>".$detail."</h4>";
+			//endforeach;
+			$html = $superhero['alias']."<hr>".$superhero['name'].'<hr>'.$superhero['biography'];
+			}
+	endforeach;
+	
+	if ($hero == '') {
+			foreach ($superheroes as $superhero):
+				$html .= $superhero['alias']."<hr>";
+			endforeach;
+			}
+			
+$page = file_get_contents("index.html");
+$doc = new DOMDocument();
+$doc->loadHTML($page);
+$results = $doc->getElementById('results');
+$appended = $doc->createElement('p',$html);
+$results->appendChild($appended);
+echo $doc->saveHTML();
+
+//echo $html;
 ?>
 
+<!--
 <ul>
 <?php foreach ($superheroes as $superhero): ?>
   <li><?= $superhero['alias']; ?></li>
 <?php endforeach; ?>
 </ul>
+-->
+
+
